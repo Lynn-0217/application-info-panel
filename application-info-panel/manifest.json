@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Application Info Panel",
+  "version": "0.4.0",
+  "description": "A local information library in a compact toolbar popup.",
+  "minimum_chrome_version": "114",
+  "permissions": ["storage", "clipboardWrite"],
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_title": "打开信息库",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "service-worker.js"
+  }
+}

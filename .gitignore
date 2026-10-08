@@ -1,0 +1,8 @@
+node_modules/
+.conda/
+*.zip
+__pycache__/
+preview-*.log
+dist/
+artifacts/
+tools/__pycache__/

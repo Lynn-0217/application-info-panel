@@ -1,0 +1,7 @@
+name: application-info-panel
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - nodejs=24
+  - pillow=12.2
