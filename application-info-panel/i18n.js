@@ -4,6 +4,11 @@
     'Application Info · 申请信息库': 'Application Info · Info Library',
     '信息库': 'Info Library',
     '＋ 新增': '+ Add',
+    '固定到侧栏': 'Pin to side panel',
+    '固定到侧栏，点击网页也不会关闭': 'Pin to side panel to keep it open while browsing',
+    '请在 Chrome 扩展中使用固定功能': 'Pinning is available in the installed Chrome extension.',
+    '固定功能暂不可用，请重新打开弹窗': 'Pinning is unavailable. Please reopen the popup.',
+    pinError: 'Could not pin: {error}',
     '搜索信息': 'Search info',
     '按分类筛选': 'Filter by category',
     '全部分类': 'All categories',
@@ -83,6 +88,7 @@
     loadError: 'Cannot read local info: {error}'
   };
   const chinese = {
+    pinError: '固定失败：{error}',
     count: '{count} 条',
     filteredCount: '{visible} / {total} 条',
     editItem: '编辑 {name}',

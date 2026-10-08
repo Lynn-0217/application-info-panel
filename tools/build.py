@@ -9,13 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "application-info-panel"
 DIST = ROOT / "dist"
 FILES = [
-    "manifest.json", "popup.html", "popup.js", "styles.css", "language.js", "i18n.js",
+    "manifest.json", "popup.html", "sidepanel.html", "popup.js", "styles.css", "language.js", "i18n.js", "pin-panel.js",
     "info-model.js", "info-store.js", "service-worker.js", "icon.svg",
     "icons/icon16.png", "icons/icon32.png", "icons/icon48.png", "icons/icon128.png",
 ]
 
 
 def build():
+    subprocess.run(["node", "tools/generate-panel.cjs"], cwd=ROOT, check=True)
     manifest = json.loads((SOURCE / "manifest.json").read_text(encoding="utf-8"))
     version = manifest["version"]
     workspace_version = json.loads((ROOT / "package.json").read_text(encoding="utf-8"))["version"]
@@ -36,13 +37,14 @@ def build():
                               "action": {**manifest["action"], "default_title": name}}
         payload["manifest.json"] = (json.dumps(localized_manifest, ensure_ascii=False, indent=2) + "\n").encode()
         payload["language.js"] = f"'use strict';\nglobalThis.INFO_LANGUAGE = '{language}';\n".encode()
-        html = payload["popup.html"].decode("utf-8")
-        if language == "en":
-            html = html.replace('lang="zh-CN"', 'lang="en"')
-            for key in sorted(translations, key=len, reverse=True):
-                if any('\u4e00' <= char <= '\u9fff' for char in key):
-                    html = html.replace(key, translations[key])
-        payload["popup.html"] = html.encode()
+        for page in ["popup.html", "sidepanel.html"]:
+            html = payload[page].decode("utf-8")
+            if language == "en":
+                html = html.replace('lang="zh-CN"', 'lang="en"')
+                for key in sorted(translations, key=len, reverse=True):
+                    if any('\u4e00' <= char <= '\u9fff' for char in key):
+                        html = html.replace(key, translations[key])
+            payload[page] = html.encode()
         payload["README.md"] = (ROOT / readme).read_bytes()
         output = DIST / folder
         output.mkdir(exist_ok=True)

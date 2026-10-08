@@ -12,11 +12,11 @@ The **340 × 480 toolbar popup** stores data locally. No account, server, analyt
 
 Download a ZIP from this repository's **Releases** page:
 
-- `application-info-panel-0.4.0-en.zip` — English interface.
-- `application-info-panel-0.4.0-zh-CN.zip` — Simplified Chinese interface.
+- `application-info-panel-0.5.0-en.zip` — English interface.
+- `application-info-panel-0.5.0-zh-CN.zip` — Simplified Chinese interface.
 
 1. Extract the ZIP to a permanent folder.
-2. Open `chrome://extensions` in Chrome 114 or later.
+2. Open `chrome://extensions` in Chrome 116 or later.
 3. Turn on **Developer mode** and click **Load unpacked**.
 4. Select the extracted folder containing `manifest.json`.
 5. In Chrome's extensions menu, pin **Application Info Panel** (or **信息库** for Chinese).
@@ -32,6 +32,7 @@ These are unpacked local installation packages, not Chrome Web Store listings. T
 - JSON backup export and merge import; identical entries are skipped.
 - Sequential writes and revision checks protect against stale edits.
 - Light/dark appearance, keyboard navigation and Ctrl / ⌘ + K to search.
+- **Pin**: click the pin beside Add to move into Chrome's persistent side panel. It stays open while you click webpages or switch tabs in the same window. Close it with the × in Chrome's side panel header. The default toolbar action still opens the small popup.
 
 Click **Save** before closing the popup. Clicking outside closes it and discards unsaved edits. Chrome controls the popup's position near its toolbar icon.
 
@@ -77,3 +78,5 @@ GitHub Actions runs tests and packages both languages. See [CHANGELOG.md](CHANGE
 - `tools/preview.cjs` — local preview server.
 
 Chrome references: [Popup](https://developer.chrome.com/docs/extensions/reference/api/action#popup), [Storage](https://developer.chrome.com/docs/extensions/reference/api/storage).
+
+Pinning adds the `sidePanel` permission. It does not add webpage access. Panel placement follows your Chrome side-panel setting. The installed extension is required; web previews only demonstrate the layouts. `sidepanel.html` is generated from the popup markup with `node tools/generate-panel.cjs` and shares the same scripts and storage.

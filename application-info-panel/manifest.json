@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
   "name": "Application Info Panel",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "A local information library in a compact toolbar popup.",
-  "minimum_chrome_version": "114",
-  "permissions": ["storage", "clipboardWrite"],
+  "minimum_chrome_version": "116",
+  "permissions": ["storage", "clipboardWrite", "sidePanel"],
+  "side_panel": { "default_path": "sidepanel.html" },
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",

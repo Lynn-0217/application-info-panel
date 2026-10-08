@@ -83,12 +83,15 @@ def main():
     state = json.loads(STATE.read_text()) if STATE.exists() else {}
     if repo and (state.get("repository") != slug or state.get("repo_id") != repo["id"]):
         raise RuntimeError("Repository already exists. Refusing to overwrite it.")
+    if repo and state.get("version") != version:
+        state = {"repository": slug, "repo_id": repo["id"], "version": version, "expected_head": state.get("commit")}
+        STATE.write_text(json.dumps(state, indent=2) + "\n")
     if not repo:
         repo = api("POST", "/user/repos", {
             "name": args.repo, "description": "Compact local-first Chrome info library. Chinese and English packages.",
             "private": False, "auto_init": True,
         })
-        state = {"repository": slug, "repo_id": repo["id"]}
+        state = {"repository": slug, "repo_id": repo["id"], "version": version}
         STATE.parent.mkdir(exist_ok=True)
         STATE.write_text(json.dumps(state, indent=2) + "\n")
         print("Created public repository: " + repo["html_url"], flush=True)
@@ -97,13 +100,15 @@ def main():
 
     if not state.get("commit"):
         files = [ROOT / name for name in [
-            ".gitignore", "README.md", "README.zh-CN.md", "CHANGELOG.md", "VALIDATION.md", "package.json", "environment.yml"
+            ".gitignore", ".gitattributes", "README.md", "README.zh-CN.md", "CHANGELOG.md", "VALIDATION.md", "package.json", "environment.yml"
         ]]
         for folder in ["application-info-panel", "tests", "tools", "docs", ".github"]:
             files += [file for file in (ROOT / folder).rglob("*")
                       if file.is_file() and "__pycache__" not in file.parts and file.suffix != ".pyc"]
         branch = repo["default_branch"]
         head = api("GET", prefix + "/git/ref/heads/" + branch)["object"]["sha"]
+        if state.get("expected_head") and head != state["expected_head"]:
+            raise RuntimeError("Remote source changed since the previous release. Refusing to overwrite it.")
         base = api("GET", prefix + "/git/commits/" + head)["tree"]["sha"]
         entries = []
         for file in sorted(set(files)):
@@ -119,7 +124,7 @@ def main():
             entries.append(entry)
         tree = api("POST", prefix + "/git/trees", {"base_tree": base, "tree": entries})
         commit = api("POST", prefix + "/git/commits", {
-            "message": f"Release v{version}: Chinese and English Chrome extension packages",
+            "message": f"Release v{version}: optional persistent side panel",
             "tree": tree["sha"], "parents": [head],
         })
         api("PATCH", prefix + "/git/refs/heads/" + branch, {"sha": commit["sha"], "force": False})

@@ -1,7 +1,11 @@
 中文和英文两份独立安装包，功能相同，界面语言由包决定。
 
-- **中文版**：`application-info-panel-0.4.0-zh-CN.zip`
-- **English**: `application-info-panel-0.4.0-en.zip`
+**新增固定功能**：点击「新增」旁的图钉，转为 Chrome 原生侧栏，在点击网页或切换标签页时持续显示。默认仍是小弹窗，侧栏通过浏览器顶部的 × 关闭。需要 Chrome 116+，增加 `sidePanel` 权限，不增加网页读取权限。
+
+**New: Pin to side panel.** Click the pin beside Add to keep the library open while browsing or switching tabs. The toolbar still opens the compact popup by default. Close the panel using Chrome's × button. Requires Chrome 116+ and the `sidePanel` permission; no webpage access is added.
+
+- **中文版**：`application-info-panel-0.5.0-zh-CN.zip`
+- **English**: `application-info-panel-0.5.0-en.zip`
 - **SHA-256**: `SHA256SUMS.txt`
 
 解压后，在 Chrome 的 `chrome://extensions` 开启开发者模式，点击「加载已解压的扩展程序」，选择包含 `manifest.json` 的文件夹。固定工具栏图标后即可使用。
@@ -16,8 +20,8 @@ A compact local info library with categories, search, content copying, edit/dele
 
 Before updating, export a backup. Replace files in the existing installation folder and reload the extension. Uninstalling removes local data.
 
-验证：20 项自动化测试通过；本地实际检查中英文界面、英文新增、搜索、完整多行复制和删除确认。原生 Chrome 窗口位置及完整浏览器重启未由自动化实测。
+验证：24 项自动化测试通过；本地检查中英文弹窗及侧栏布局。固定接口验证涵盖窗口范围、用户点击时同步打开、成功后关闭弹窗、失败保留及重试。原生 Chrome 的侧栏打开和切换标签未直接实测，网页示例不提供实际固定。
 
-Validation: 20 automated tests passed, plus local browser checks of both interfaces, English add/search, multiline copying and delete confirmation. Native popup anchoring and a complete Chrome restart were not directly automated.
+Validation: 24 automated tests passed, including pin opening within a user gesture, window-wide scope and failure/retry handling. Both popup and side panel layouts were checked locally. Native Chrome side-panel opening and tab switching were not directly tested. The web demo does not implement native pinning.
 
 These are local unpacked packages, not Chrome Web Store listings. / 本发布不是 Chrome 应用商店上架。

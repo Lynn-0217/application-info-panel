@@ -12,11 +12,11 @@
 
 从仓库的 **Releases** 页面下载：
 
-- `application-info-panel-0.4.0-zh-CN.zip`：简体中文界面。
-- `application-info-panel-0.4.0-en.zip`：英文界面。
+- `application-info-panel-0.5.0-zh-CN.zip`：简体中文界面。
+- `application-info-panel-0.5.0-en.zip`：英文界面。
 
 1. 把 ZIP 解压到准备长期保留的文件夹。
-2. 在 Chrome 114 或更新版本中打开 `chrome://extensions`。
+2. 在 Chrome 116 或更新版本中打开 `chrome://extensions`。
 3. 开启「开发者模式」，点击「加载已解压的扩展程序」。
 4. 选择解压后包含 `manifest.json` 的文件夹。
 5. 在右上角扩展程序菜单中固定「信息库」（英文版名为 Application Info Panel）。
@@ -32,6 +32,7 @@
 - JSON 备份导出和合并导入，自动跳过完全重复的记录。
 - 顺序写入和修订检查，避免旧窗口覆盖新内容。
 - 浅色 / 深色模式、键盘操作、Ctrl / ⌘ + K 聚焦搜索。
+- 「新增」旁的图钉可以固定到 Chrome 侧栏，点击网页或切换同一窗口的标签页时持续显示。点击浏览器侧栏顶部的 × 收起。默认工具栏入口仍打开小弹窗。
 
 编辑后点击「保存信息」。点击弹窗外会关闭弹窗，未保存的修改不会保留。弹窗的位置由 Chrome 控制，靠近工具栏图标显示。
 
@@ -69,3 +70,5 @@ conda activate ./.conda
 GitHub Actions 会运行测试并打包两种语言。变更和验证边界见 [CHANGELOG.md](CHANGELOG.md)、[VALIDATION.md](VALIDATION.md)。
 
 Chrome 参考：[弹窗](https://developer.chrome.com/docs/extensions/reference/api/action#popup)、[本地存储](https://developer.chrome.com/docs/extensions/reference/api/storage)。
+
+固定使用新增的 `sidePanel` 权限，不增加网页读取权限。侧栏的位置跟随 Chrome 设置。固定功能需在实际安装的扩展中使用，网页预览仅展示布局。`sidepanel.html` 由 `node tools/generate-panel.cjs` 从弹窗页面生成，两种界面共用脚本和数据。

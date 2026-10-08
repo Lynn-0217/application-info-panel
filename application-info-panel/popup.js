@@ -5,6 +5,9 @@ const M = InfoModel;
 const $ = id => document.getElementById(id);
 const isExtension = Boolean(globalThis.chrome?.runtime?.id && chrome.storage?.local);
 const isPreview = !isExtension && new URLSearchParams(location.search).has('demo');
+const isSidePanel = document.documentElement.dataset.surface === 'panel';
+const panelPin = isExtension && !isSidePanel ? createPanelPin(chrome, () => window.close()) : null;
+let pinReady = isPreview;
 let items = [];
 let activeCategory = null;
 let editingItem = null;
@@ -19,6 +22,7 @@ const iconPaths = {
   edit: ['m16 3 5 5-12 12-6 1 1-6Z', 'm14 5 5 5'],
   trash: ['M3 6h18', 'M9 6V3h6v3', 'm5 6 1 15h12l1-15', 'M10 10v7M14 10v7'],
   close: ['m6 6 12 12', 'm18 6-12 12'],
+  pin: ['m16 3 5 5-4 1-4 5-1 4-6-6 4-1 5-4Z', 'm8 16-5 5'],
 };
 function icon(name) {
   const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -171,6 +175,7 @@ function setBusy(value) {
   busy = value;
   for (const id of ['saveBtn', 'confirmDeleteBtn', 'cancelDeleteBtn', 'confirmImportBtn', 'cancelImportBtn', 'cancelBtn', 'closeDialogBtn', 'addBtn', 'emptyAddBtn', 'importBtn', 'exportBtn']) $(id).disabled = value || !loaded;
   $('saveBtn').textContent = value ? t('处理中…') : t('保存信息');
+  $('pinBtn').disabled = value || !loaded || !pinReady;
 }
 async function mutate(action, payload, errorId, successMessage) {
   if (busy) return;
@@ -188,7 +193,16 @@ async function mutate(action, payload, errorId, successMessage) {
     showError(errorId, error.message);
   } finally { setBusy(false); }
 }
-for (const [id, name] of [['searchIcon', 'search'], ['closeDialogBtn', 'close']]) $(id).append(icon(name));
+for (const [id, name] of [['searchIcon', 'search'], ['closeDialogBtn', 'close'], ['pinBtn', 'pin']]) $(id).append(icon(name));
+$('pinBtn').addEventListener('click', async () => {
+  if (busy || !pinReady) return;
+  if (isPreview) { showToast(t('请在 Chrome 扩展中使用固定功能')); return; }
+  setBusy(true);
+  try { await panelPin.open(); }
+  catch (error) {
+    showToast(error.message === 'PIN_NOT_READY' ? t('固定功能暂不可用，请重新打开弹窗') : t('pinError', { error: error.message }));
+  } finally { setBusy(false); }
+});
 $('addBtn').addEventListener('click', () => openEdit());
 $('emptyAddBtn').addEventListener('click', () => openEdit());
 for (const id of ['closeDialogBtn', 'cancelBtn']) $(id).addEventListener('click', () => { if (!busy) $('editDialog').close(); });
@@ -273,6 +287,15 @@ async function init() {
     $('storageStatus').title = isPreview ? t('示例修改仅保留在当前页面') : t('信息仅保存在此浏览器');
     setBusy(false);
     render();
+    if (panelPin) {
+      try {
+        await panelPin.prepare();
+        pinReady = true;
+        setBusy(busy);
+      } catch {
+        $('pinBtn').title = t('固定功能暂不可用，请重新打开弹窗');
+      }
+    }
   } catch (error) {
     showError('errorBanner', error.message);
     $('storageStatus').textContent = t('本地信息未加载');
