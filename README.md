@@ -2,81 +2,76 @@
 
 [简体中文](README.zh-CN.md) · English
 
-A compact Chrome extension for saving and copying frequently used information. Each entry has a **category, name and content**. Useful for application forms, citations, education, addresses and other personal facts.
+Filling out another application form? You may find yourself opening the same documents again to copy your education history, mailing address or publication details.
 
-The **340 × 480 toolbar popup** stores data locally. No account, server, analytics, page-reading permissions or automatic form filling.
+Application Info Panel keeps frequently used information within reach in Chrome. Save it once, open the extension when you need it, and copy the relevant entry into your form. No account is needed; your information stays in your browser.
 
-![English interface](docs/screenshots/en.jpg)
+## When would I use it?
 
-## Download and install
+- **School and scholarship applications:** reuse education history, research experience, awards, citations and recommender contact details.
+- **Job applications and registrations:** keep a personal introduction, work experience or mailing address ready for different websites.
+- **Everyday reference:** save information you often need to look up.
 
-Download a ZIP from this repository's **Releases** page:
+Choose your own categories, such as Personal, Education or Publications. Each category can hold multiple entries.
 
-- `application-info-panel-0.5.0-en.zip` — English interface.
-- `application-info-panel-0.5.0-zh-CN.zip` — Simplified Chinese interface.
+![English interface showing fictional personal details and a citation](docs/screenshots/en.jpg)
 
-1. Extract the ZIP to a permanent folder.
-2. Open `chrome://extensions` in Chrome 116 or later.
-3. Turn on **Developer mode** and click **Load unpacked**.
-4. Select the extracted folder containing `manifest.json`.
-5. In Chrome's extensions menu, pin **Application Info Panel** (or **信息库** for Chinese).
-6. Click its toolbar icon, then **Add** to save your first entry.
+*The screenshot uses fictional examples. A new installation starts with an empty library, ready for your own information.*
 
-These are unpacked local installation packages, not Chrome Web Store listings. The interface language is fixed by the package you choose; saved user content is never translated.
+## Start here: install in Chrome
 
-## Features
+Open the [download page](https://github.com/Lynn-0217/application-info-panel/releases/latest) and look under **Assets**. Choose the file ending in `-en.zip` for English or `-zh-CN.zip` for Simplified Chinese.
 
-- Custom categories, filtering and search across names, categories and content.
-- One **Copy** button per entry: content only, including line breaks.
-- Pencil and trash icons for editing and direct deletion with confirmation.
-- JSON backup export and merge import; identical entries are skipped.
-- Sequential writes and revision checks protect against stale edits.
-- Light/dark appearance, keyboard navigation and Ctrl / ⌘ + K to search.
-- **Pin**: click the pin beside Add to move into Chrome's persistent side panel. It stays open while you click webpages or switch tabs in the same window. Close it with the × in Chrome's side panel header. The default toolbar action still opens the small popup.
+Installation is currently manual; the extension is not listed in the Chrome Web Store. Use Chrome 116 or later. No additional software is needed.
 
-Click **Save** before closing the popup. Clicking outside closes it and discards unsaved edits. Chrome controls the popup's position near its toolbar icon.
+1. Extract the ZIP into a folder you plan to keep.
+2. Enter `chrome://extensions` in Chrome's address bar.
+3. Turn on **Developer mode**, then click **Load unpacked**.
+4. Select the extracted folder **containing `manifest.json`**. You may need to open an outer folder first.
+5. Click Chrome's puzzle-piece icon and pin **Application Info Panel** to the toolbar.
 
-## Data and updates
+Click the extension's toolbar icon to open your library. Keep the extracted folder in place: Chrome still needs its files after installation.
 
-Entries use `chrome.storage.local` under `applicationInfoItems`. Normal popup or browser closure does not clear saved data. Uninstalling removes local data. Export backups regularly; JSON backups contain plain text.
+## Save something, then use it in a form
 
-To update or switch language, export a backup, copy the new package's files into the **same installation folder**, then click **Reload** in `chrome://extensions`. Keep that folder in place. Loading a different folder may create a separate extension with separate storage; transfer entries with JSON export/import. Both languages use compatible backups.
+Click **Add** and fill in three fields. For example, to save a citation:
 
-There is no notes field in the UI. Legacy notes remain in existing data and backups for compatibility.
+| Field | Example |
+| --- | --- |
+| Category: helps you find it later | Publications |
+| Name: a label you will recognize | First paper citation |
+| Content: the text you want to paste | Chen, A. (2025). Learning from limited data. Example Journal of Research. |
 
-## Development and reproducible packaging
+Click **Save** and wait for the confirmation. Your entry is now stored. Content can include multiple lines.
 
-Plain HTML/CSS/JavaScript, no npm dependencies. Node.js 24 runs tests; Python 3.10+ builds ZIPs using its standard library.
+The next time you fill out a form:
 
-```sh
-npm test
-npm run build
-npm run preview
-```
+1. Open the library from Chrome's toolbar.
+2. Search for a keyword or select a category to find the entry.
+3. Click **Copy** beside it, then paste into the form field.
 
-`dist/` contains two unpacked folders, two ZIPs and `SHA256SUMS.txt`. The packager uses an explicit file list and fixed ZIP timestamps. Identical source and toolchain produce matching checksums. Browser data, test exports and local environment files are excluded.
+Copy includes only the content, with its line breaks. The name and category stay out of the copied text. You can adjust the wording after pasting to fit the form.
 
-Preview: `http://127.0.0.1:8765/popup.html?demo`. Fictional data stays in page memory and resets on refresh. Run `node tools/preview.cjs --language en` after building to preview English. Regular-tab previews do not test native popup anchoring or Chrome storage.
+## Keep the library open while you work
 
-Optional Conda environment:
+The small popup closes when you click back on a webpage. To keep your information visible, click the **pin beside Add inside the popup**. This opens Chrome's side panel, which stays open while you use the webpage or switch tabs in the same window. Close it with the × at the top of the side panel.
 
-```sh
-conda env create --prefix ./.conda --file environment.yml
-conda activate ./.conda
-```
+The two pins serve different purposes: the pin in Chrome's puzzle-piece menu keeps the extension icon on the toolbar; the pin inside the library keeps the library visible.
 
-`python tools/render-icons.py` regenerates the included PNGs using Pillow 12.2. Python and Conda are not needed to use the extension.
+## Edit, delete and back up
 
-GitHub Actions runs tests and packages both languages. See [CHANGELOG.md](CHANGELOG.md) and [VALIDATION.md](VALIDATION.md) for changes and verification limits.
+Click an entry's **pencil** to edit it, then click **Save**. Click the **trash icon** to delete an entry; you will be asked to confirm.
 
-## Layout
+Use **Export** at the bottom to download a backup of all your entries. To move them to another browser or computer, install the extension there, click **Import**, and select the backup. Import keeps existing entries and skips identical duplicates.
 
-- `application-info-panel/` — Chinese default source and manifest.
-- `language.js`, `i18n.js` — package language and shared translations.
-- `tests/` — model, storage, background and localization checks.
-- `tools/build.py` — bilingual release packager.
-- `tools/preview.cjs` — local preview server.
+## Will my information stay saved? Is it private?
 
-Chrome references: [Popup](https://developer.chrome.com/docs/extensions/reference/api/action#popup), [Storage](https://developer.chrome.com/docs/extensions/reference/api/storage).
+**Closing the popup or restarting Chrome does not erase saved entries.** Remember to save edits first: unsaved changes are lost when the popup closes.
 
-Pinning adds the `sidePanel` permission. It does not add webpage access. Panel placement follows your Chrome side-panel setting. The installed extension is required; web previews only demonstrate the layouts. `sidepanel.html` is generated from the popup markup with `node tools/generate-panel.cjs` and shares the same scripts and storage.
+Information stays in this browser. It is not uploaded to this GitHub repository or automatically synced to other computers. The extension needs no account and does not read the webpage you are filling out. Exported backups contain all your saved content, so keep them somewhere safe.
+
+**Uninstalling the extension deletes its local information. Export a backup regularly.** Before updating or changing language, export a backup, replace the files in the **original installation folder**, and click the extension's reload button in `chrome://extensions`. Loading a different folder may create a separate installation; use your backup to transfer entries. Chinese and English backups work in either version. Your saved text is not translated.
+
+## Interested in the project or contributing?
+
+See the [development guide](docs/DEVELOPMENT.md), [change log](CHANGELOG.md) and [validation notes](VALIDATION.md). You do not need these to install or use the extension.
